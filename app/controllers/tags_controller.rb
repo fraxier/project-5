@@ -1,4 +1,3 @@
-require 'pry'
 class TagsController < ApplicationController
   def index
     tags = current_user.tags

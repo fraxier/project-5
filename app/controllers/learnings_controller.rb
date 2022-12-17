@@ -1,4 +1,3 @@
-require 'pry'
 class LearningsController < ApplicationController
   def index
     learnings = current_user.learnings&.order(updated_at: :desc)

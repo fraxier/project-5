@@ -1,4 +1,3 @@
-require 'pry'
 class SessionsController < ApplicationController
   def login
     @user = User.find_by(email: session_params[:email])

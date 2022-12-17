@@ -1,4 +1,3 @@
-require 'pry'
 class HeadingsController < ApplicationController
   def index
     headings = current_user&.headings
