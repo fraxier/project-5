@@ -44,10 +44,27 @@ class NotesController < ApplicationController
     end
   end
 
+  def update
+    note = Note.find(note_params[:id])
+    if note
+      note.content = note_params[:content]
+      if note.save
+        render json: {
+          status: :success
+        }
+      end
+    else
+      render json: {
+        status: 500,
+        errors: note.errors.full_messages
+      }
+    end
+  end
+
   private
 
   def note_params
-    params.require(:note).permit(:content, :heading_id)
+    params.require(:note).permit(:id, :content, :heading_id)
   end
 
   def url_params
