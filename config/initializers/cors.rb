@@ -7,8 +7,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'https://lightnotes-static.fly.dev'
-
+    if Rails.env === 'production'
+      origins 'https://lightnotes-static.fly.dev'
+    else
+      origins 'http://localhost:3001'
+    end
     resource '*',
              headers: :any,
              methods: %i[get post put patch delete options head],

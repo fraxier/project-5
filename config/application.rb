@@ -37,5 +37,6 @@ module Journeys
     config.api_only = false
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+    config.force_ssl = true if Rails.env === 'production'
   end
 end
