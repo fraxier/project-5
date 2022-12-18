@@ -1,3 +1,4 @@
+require 'pry'
 class LearningsController < ApplicationController
   def index
     learnings = current_user.learnings&.order(updated_at: :desc)
@@ -19,6 +20,7 @@ class LearningsController < ApplicationController
     if learning
       result = {
         learning:,
+        tags: learning.tags,
         headings: learning.headings.map do |head|
           { heading: head, notes: head.notes }
         end
@@ -73,6 +75,43 @@ class LearningsController < ApplicationController
     }
   end
 
+  def remove_tag
+    learning = Learning.find(tag_params[:learning_id])
+    tag = Tag.find(tag_params[:tag_id])
+    if learning && tag
+      learning.tags.delete tag
+      if learning.save
+        return render json: {
+          status: :deleted,
+          tag:
+        }
+      end
+    end
+    render json: {
+      status: 500,
+      errors: ['Something went wrong trying to remove tag from learning']
+    }
+  end
+
+  def add_tags
+    learning = Learning.find(params[:learning_id])
+    if learning
+      learning.tags << tags = params[:tags].map do |tag|
+        Tag.find(tag[:id])
+      end
+      if learning.save
+        render json: {
+          tags:
+        }
+      end
+    end
+  rescue StandardError => e
+    render json: {
+      status: 500,
+      errors: e
+    }
+  end
+
   def recent
     params.permit(:num)
     num = params[:num]
@@ -98,5 +137,9 @@ class LearningsController < ApplicationController
 
   def learning_params
     params.require(:learning).permit(:id, :name, :motivation, :updated_at, :tags)
+  end
+
+  def tag_params
+    params.permit(:learning_id, :tag_id)
   end
 end

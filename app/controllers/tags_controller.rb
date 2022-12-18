@@ -1,3 +1,4 @@
+require 'pry'
 class TagsController < ApplicationController
   def index
     tags = current_user.tags
@@ -16,6 +17,10 @@ class TagsController < ApplicationController
   def create
     tag = Tag.new(tag_params)
     tag&.user_id = current_user.id
+    if url_params[:learning_id] >= 0
+      learning = Learning.find(url_params[:learning_id])
+      tag.learnings << learning if learning
+    end
     if tag.save
       render json: {
         status: :created,
@@ -50,6 +55,6 @@ class TagsController < ApplicationController
   end
 
   def url_params
-    params.permit(:id)
+    params.permit(:id, :learning_id)
   end
 end

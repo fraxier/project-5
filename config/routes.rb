@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get '/recent_learnings', to: 'learnings#recent'
 
   get '/mega_summary', to: 'sessions#mega_summary'
+  patch '/learnings/tag', to: 'learnings#remove_tag'
+  patch '/learnings/add_tags', to: 'learnings#add_tags'
 
   # resources :user, only: %i[index show create update] do
   #   resources :subject, only: %i[index show create update destroy] do
